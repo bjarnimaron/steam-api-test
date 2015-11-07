@@ -10,9 +10,15 @@ namespace steam_api_test
 {
     class Program
     {
+        static String getAPIKey()
+        {
+            StreamReader parse = File.OpenText("apikey.xml");
+            return parse.ReadLine();
+        }
+
         static void Main(string[] args)
         {
-            System.Console.WriteLine("Hello World!");
+            System.Console.WriteLine(getAPIKey());
             System.Console.ReadKey();
         }
     }

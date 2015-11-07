@@ -5,6 +5,7 @@
 *.suo
 *.user
 *.sln.docstates
+apikey.xml
 
 # Build results
 [Dd]ebug/

@@ -29,6 +29,7 @@ namespace steam_api_test
             Console.ReadKey();
         }
 
+        //Tekur við XML strengnum frá sendRequest og les úr honum gildin sem við viljum fá
         static void GetVacBan(string xmlInput)
         {
             StringBuilder output = new StringBuilder();
@@ -49,6 +50,7 @@ namespace steam_api_test
 
         }
 
+        //Sendir HTTP beiðni á Steam Community og sækir bans á einhverjum ákveðnum leikmanni, skilar svo sem XML streng
         static string sendRequest(string steamId)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=" + getAPIKey() + "&steamids=" + steamId + "&format=xml");

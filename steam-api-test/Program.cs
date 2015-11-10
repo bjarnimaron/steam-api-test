@@ -23,13 +23,50 @@ namespace steam_api_test
 
         static void Main(string[] args)
         {
-            string playerID = "76561197963115149";
+            string file = "hello.dem";
 
-            parseForName(nameRequest(playerID));
-            parseForBan(banRequest(playerID));
+            foreach (string player in parseDemo(file))
+            {
+                parseForName(nameRequest(player));
+                parseForBan(banRequest(player));
+            }
+        }
 
-            
-            Console.ReadKey();
+        static List<String> parseDemo(string fileName)
+        {
+            List<String> playerIDs = new List<String>();
+            using (var fileStream = File.OpenRead(fileName))
+            {
+                using (var parser = new DemoParser(fileStream))
+                {
+                    //hasMatchStarted framkallar viðvörun um að mögulegt sé
+                    //að það verði aldrei notað, með þessu slökkvum við á
+                    //þessari viðvörun.
+                    #pragma warning disable 0219 
+                    bool hasMatchStarted = false;
+                    #pragma warning restore 0219
+
+                    parser.ParseHeader();
+
+                    parser.MatchStarted += (sender, e) =>
+                    {
+                        hasMatchStarted = true;
+
+                        foreach (var player in parser.PlayingParticipants)
+                        {
+                            string test = player.SteamID.ToString();
+                            playerIDs.Add(test);
+                        }
+                    };
+                    //Þetta fyrir neðan er algjörlega ógeðslegt, ég veit. 
+                    //En er samt nauðsynlegt svo að playerIDs verði fyllt. 
+                    for (int i = 0; i < 3000; i++)
+                    {
+                        parser.ParseNextTick();
+                    }
+                }
+            }
+            return playerIDs;
         }
 
         //Tekur við XML strengnum frá sendRequest og les úr honum gildin sem við viljum fá
